@@ -1,18 +1,12 @@
 <?php 
 
 return [
-    'raw_item' => 'Raw Items',
-    'description' => 'Description',
-    'actions' => 'Actions',
-    'edit_item' => 'Edit Raw Item',
-    'delete_item' => 'Delete Raw Item',
-    'create_item' => 'Create New Raw Item',
-    'stock' => 'Stock',
-    'create_supplier' => 'Add New Supplier',
+    'add_new_teacher' => 'Add New Teacher',
     'name' => 'Name',
-    'identifier' => 'Identifier',
-    'address' => 'Address',
+    'unique_name' => 'Unique Name',
     'phone_no' => 'Phone No.',
-    'edit_supplier' => 'Edit Supplier Detail',
-    'delete_supplier' => 'Delete Supplier',
+    'actions' => 'Actions',
+    'edit_teacher' => 'Edit Teacher',
+    'delete_teacher' => 'Delete Teacher',
+    'view_detail' => 'View Detail',
 ];

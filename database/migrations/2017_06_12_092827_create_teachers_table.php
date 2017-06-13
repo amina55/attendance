@@ -21,7 +21,7 @@ class CreateTeachersTable extends Migration
             $table->string('address', 200);
             $table->string('qualification', 200);
             $table->string('unique_name', 50)->unique();
-            $table->unsignedInteger('cnic')->unique();
+            $table->string('cnic', 50)->unique();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
 

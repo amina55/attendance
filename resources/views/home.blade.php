@@ -8,7 +8,19 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    You are logged in!
+                    <div class="table-responsive">
+                        <table class="table table-stripped">
+                            <tbody>
+                            @foreach($sections as $section)
+                                <tr>
+                                    <th>{{ $section->identifier }}</th>
+                                    <td><a href="{{ route('student.index', [$section->id]) }}">Students</a></td>
+                                    <td><a href="{{ route('subject.index', [$section->id]) }}">Subjects</a></td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

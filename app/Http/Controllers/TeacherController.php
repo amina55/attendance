@@ -43,10 +43,11 @@ class TeacherController extends Controller
         $teacher = Teacher::firstOrCreate($parameters);
 
         User::create([
-            'username' => $parameters['username'],
+            'name' => $parameters['name'],
+            'username' => $parameters['unique_name'],
             'email' => $parameters['email'],
             'type' => 'teacher',
-            'password' => bcrypt($parameters['username']),
+            'password' => bcrypt($parameters['unique_name']),
             'teacher_id' => $teacher->id
         ]);
 

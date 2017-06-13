@@ -13,11 +13,11 @@
 
 Route::get('/', function () {
 
-    $view = 'auth.login';
+    $route = 'login';
     if(\Illuminate\Support\Facades\Auth::check()) {
-       $view = 'home';
+       $route = 'home';
     }
-    return view($view);
+    return redirect()->route($route);
 });
 
 Auth::routes();
@@ -25,12 +25,24 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function (){
 
-    Route::get('/home', 'HomeController@index');
+    Route::get('/home', 'HomeController@index')->name('home');
     Route::get('user/profile', 'UserController@showProfile')->name('profile');
 
     Route::group(['middleware' => 'role:admin', 'prefix' => 'admin'], function (){
-        Route::resource('student', 'StudentController');
-        Route::resource('subject', 'SubjectController');
+        Route::group(['prefix' => 'student'], function (){
+            Route::get('/list/{id}', 'StudentController@index')->name('student.index');
+
+
+        });
+
+        Route::group(['prefix' => 'subject'], function (){
+            Route::get('/list/{id}', 'SubjectController@index')->name('subject.index');
+
+
+        });
+
+
+
         Route::resource('teacher', 'TeacherController');
     });
 });
