@@ -13,3 +13,11 @@ table, th, td {
 .panel-body {
     padding-top: 20px;
 }
+.left-label{
+    text-align: left !important;
+    padding-left: 100px;
+}
+.centre-align-heading {
+    text-align: center;
+    margin: 25px;
+}

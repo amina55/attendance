@@ -15,17 +15,17 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('semester');
+            $table->enum('section', ['A', 'B']);
             $table->string('name', 100);
-            $table->string('roll_no', 50);
+            $table->unsignedInteger('roll_no');
             $table->string('enroll_no', 50)->unique();
+            $table->string('email', 50)->unique();
             $table->string('phone_no', 30);
             $table->string('address', 200);
-            $table->unsignedInteger('cnic')->unique();
-            $table->unsignedInteger('class_id');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
 
-            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
         });
     }
 

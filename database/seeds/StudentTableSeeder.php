@@ -13,13 +13,26 @@ class StudentTableSeeder extends Seeder
     {
         Student::firstOrCreate([
             'name' => 'student1',
-            'roll_no' => '50',
+            'semester' => 1,
+            'section' => 'A',
+            'roll_no' => 1,
             'enroll_no' => 'sem12345',
             'phone_no' => '09988796898789',
             'address' => 'India',
-            'cnic' => '123456789',
-            'class_id' => 1,
             'status' => 'active',
+            'email' => 'student1@gmail.com',
+        ]);
+
+        Student::firstOrCreate([
+            'name' => 'student2',
+            'semester' => 2,
+            'section' => 'A',
+            'roll_no' => 1,
+            'enroll_no' => 'sem2323',
+            'phone_no' => '09988796898789',
+            'address' => 'India',
+            'status' => 'active',
+            'email' => 'student2@gmail.com',
         ]);
     }
 }

@@ -25,6 +25,7 @@
     </script>
 </head>
 <body>
+<?php $semesters = [1,2,3,4,5,6,7,8] ?>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -48,8 +49,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         @if(Auth::user() && Auth::user()->type == 'admin')
-                            <li><a href="{{ route('student.index') }}">Students</a></li>
-                            <li><a href="{{ route('subject.index') }}">Subjects</a></li>
+                            <li><a href="{{ route('home') }}">Home</a></li>
+                            <li><a href="{{ route('student.create') }}">Add Student</a></li>
+                            <li><a href="{{ route('subject.create') }}">Add Subject</a></li>
                             <li><a href="{{ route('teacher.index') }}">Teachers</a></li>
                         @endif&nbsp;
                     </ul>

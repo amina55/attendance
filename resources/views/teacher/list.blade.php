@@ -21,7 +21,6 @@
                     </a>
                     <a href="{{ route('teacher.destroy', [$teacher->id]) }}" class="no-text-decoration" title="{{ trans('content.delete_teacher') }}">
                         <i class="fa fa-lg fa-trash"></i>
-                        {{ method_field('DELETE') }}
                     </a>
 
                     <a href="{{ route('teacher.show', [$teacher->id]) }}" class="no-text-decoration" title="{{ trans('content.view_detail') }}">

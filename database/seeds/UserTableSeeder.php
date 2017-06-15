@@ -12,13 +12,11 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        $randomName = str_random(5);
-        User::firstOrCreate([
-            'name' => $randomName,
-            'type' => 'admin',
-            'username' => $randomName,
-            'email' => $randomName.'@gmail.com',
-            'password' => bcrypt($randomName),
+        User::updateOrCreate(['username' => 'amina'], [
+            'name' => 'amina',
+            'username' => 'amina',
+            'email' => 'amina@gmail.com',
+            'password' => bcrypt('amina'),
         ]);
     }
 }

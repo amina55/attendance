@@ -1,29 +1,32 @@
 @extends('layouts.app')
 
+<?php $semesters = [1,2,3,4,5,6,7,8] ?>
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
-
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-stripped">
-                            <tbody>
-                            @foreach($sections as $section)
-                                <tr>
-                                    <th>{{ $section->identifier }}</th>
-                                    <td><a href="{{ route('student.index', [$section->id]) }}">Students</a></td>
-                                    <td><a href="{{ route('subject.index', [$section->id]) }}">Subjects</a></td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+       <table class="table">
+           <thead>
+                <th>Semesters</th>
+                <th>Subjects</th>
+                <th colspan="2">Students</th>
+           </thead>
+           @foreach($semesters as $semester)
+           <tr>
+               <th>
+                   Semester{{ $semester}}
+               </th>
+               <td>
+                   <a title="Subjects of Semester" href="{{ route('subject.list', [$semester]) }}">Subjects</a>
+               </td>
+               <td>
+                   <a title="Students of Section A" href="{{ route('student.list', [$semester, 'A']) }}">Section A</a>
+               </td>
+               <td>
+                   <a title="Students of Section B" href="{{ route('student.list', [$semester, 'B']) }}">Section B</a>
+               </td>
+           </tr>
+           @endforeach
+       </table>
     </div>
 </div>
 @endsection

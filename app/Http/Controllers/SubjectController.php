@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Subject;
+use App\Teacher;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -12,9 +13,10 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($subjectId)
     {
-        //
+        $subjects = Subject::where(['semester'=> $subjectId])->get();
+        return  view('subject.index', ['subjects' => $subjects]);
     }
 
     /**
@@ -24,7 +26,8 @@ class SubjectController extends Controller
      */
     public function create()
     {
-        //
+        $teachers = Teacher::all();
+        return view('subject.create', ['subject' => null, 'teachers' => $teachers]);
     }
 
     /**
@@ -35,7 +38,10 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $parameters = $request->all();
+        unset($parameters['_token']);
+        /*Subject::firstOrCreate($parameters);
+        return redirect()->route('subject.list', [$parameters['semester'], $parameters['section']]);*/
     }
 
     /**
@@ -46,7 +52,7 @@ class SubjectController extends Controller
      */
     public function show(Subject $subject)
     {
-        //
+        return view('subject.show', ['subject' => $subject]);
     }
 
     /**
@@ -57,7 +63,7 @@ class SubjectController extends Controller
      */
     public function edit(Subject $subject)
     {
-        //
+        return view('subject.create', ['subject' => $subject]);
     }
 
     /**
@@ -69,17 +75,22 @@ class SubjectController extends Controller
      */
     public function update(Request $request, Subject $subject)
     {
-        //
+        $parameters = $request->all();
+        unset($parameters['_token']);
+        unset($parameters['_method']);
+        Subject::where('id', $subject->id)->update($parameters);
+        return redirect()->route('subject.list', [$parameters['semester'], $parameters['section']]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Subject  $subject
+     * @param  $subjectId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Subject $subject)
+    public function destroy($subjectId)
     {
-        //
+        Subject::where('id', $subjectId)->delete();
+        return redirect()->back();
     }
 }

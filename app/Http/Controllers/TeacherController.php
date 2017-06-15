@@ -62,7 +62,7 @@ class TeacherController extends Controller
      */
     public function show(Teacher $teacher)
     {
-        //
+        return view('teacher.show', ['teacher' => $teacher]);
     }
 
     /**
@@ -96,11 +96,12 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Teacher  $teacher
+     * @param  $teacherId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $teacher)
+    public function destroy($teacherId)
     {
-
+        Teacher::where('id', $teacherId)->delete();
+        return redirect()->back();
     }
 }
