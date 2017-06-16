@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\AssignSubject;
+use App\Http\Requests\SubjectCreateRequest;
 use App\Subject;
 use App\Teacher;
-use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -27,21 +28,56 @@ class SubjectController extends Controller
     public function create()
     {
         $teachers = Teacher::all();
-        return view('subject.create', ['subject' => null, 'teachers' => $teachers]);
+        return view('subject.create', ['subject' => null, 'teachers' => $teachers, 'teacherA' => null, 'teacherB' => null]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request|SubjectCreateRequest  $request
+     * @return string $route
      */
-    public function store(Request $request)
+    public function store(SubjectCreateRequest $request)
     {
         $parameters = $request->all();
         unset($parameters['_token']);
-        /*Subject::firstOrCreate($parameters);
-        return redirect()->route('subject.list', [$parameters['semester'], $parameters['section']]);*/
+
+        if($parameters['teacher_section_A'] == $parameters['teacher_section_B'] && $parameters['period_section_A'] == $parameters['period_section_B']) {
+            $route = redirect()->back()->withInput()->withErrors(['period_section_B' => "You can not assign a Teacher to Section at same Period. Please re-schedule."]);
+        } else {
+            $period = AssignSubject::getTeacherAssignPeriod($parameters['teacher_section_A'], $parameters['period_section_A']);
+            if($period) {
+                $route = redirect()->back()->withInput()->withErrors(['teacher_section_A' => "Teacher's period  is booked. Kindly re-schedule."]);
+            } else {
+                $period = AssignSubject::getTeacherAssignPeriod($parameters['teacher_section_B'], $parameters['period_section_B']);
+                if($period) {
+                    $route = redirect()->back()->withInput()->withErrors(['teacher_section_B' => "Teacher's period  is booked. Kindly re-schedule."]);
+                } else {
+                    $subject = Subject::firstOrCreate([
+                        'semester' => $parameters['semester'],
+                        'name' => $parameters['name'],
+                        'short_key' => $parameters['short_key'],
+                        'credit_hour' => $parameters['credit_hour'],
+                    ]);
+
+                    AssignSubject::firstOrCreate([
+                        'subject_id' => $subject->id,
+                        'teacher_id' => $parameters['teacher_section_A'],
+                        'period' => $parameters['period_section_A'],
+                        'section' => 'A',
+                    ]);
+
+                    AssignSubject::firstOrCreate([
+                        'subject_id' => $subject->id,
+                        'teacher_id' => $parameters['teacher_section_B'],
+                        'period' => $parameters['period_section_B'],
+                        'section' => 'B',
+                    ]);
+                    $route = redirect()->route('subject.list', [$parameters['semester']]);
+                }
+            }
+        }
+        return $route;
     }
 
     /**
@@ -63,23 +99,57 @@ class SubjectController extends Controller
      */
     public function edit(Subject $subject)
     {
-        return view('subject.create', ['subject' => $subject]);
+        $teachers = Teacher::all();
+        $teacherA = AssignSubject::getSubjectSection($subject->id, 'A');
+        $teacherB = AssignSubject::getSubjectSection($subject->id, 'B');
+        return view('subject.create', ['subject' => $subject, 'teachers' => $teachers, 'teacherA' => $teacherA, 'teacherB' => $teacherB]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request|SubjectCreateRequest  $request
      * @param  \App\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Subject $subject)
+    public function update(SubjectCreateRequest $request, Subject $subject)
     {
         $parameters = $request->all();
         unset($parameters['_token']);
         unset($parameters['_method']);
-        Subject::where('id', $subject->id)->update($parameters);
-        return redirect()->route('subject.list', [$parameters['semester'], $parameters['section']]);
+
+        $subjectId = $subject->id;
+        if($parameters['teacher_section_A'] == $parameters['teacher_section_B'] && $parameters['period_section_A'] == $parameters['period_section_B']) {
+            $route = redirect()->back()->withInput()->withErrors(['period_section_B' => "You can not assign same Period. Please re-schedule."]);
+        } else {
+            $period = AssignSubject::getTeacherAssignPeriod($parameters['teacher_section_A'], $parameters['period_section_A'], $subjectId);
+            if($period) {
+                $route = redirect()->back()->withInput()->withErrors(['teacher_section_A' => "Teacher's period  is booked. Kindly re-schedule."]);
+            } else {
+                $period = AssignSubject::getTeacherAssignPeriod($parameters['teacher_section_B'], $parameters['period_section_B'], $subjectId);
+                if($period) {
+                    $route = redirect()->back()->withInput()->withErrors(['teacher_section_B' => "Teacher's period  is booked. Kindly re-schedule."]);
+                } else {
+                    Subject::updateOrCreate(['id' => $subjectId], [
+                        'semester' => $parameters['semester'],
+                        'name' => $parameters['name'],
+                        'credit_hour' => $parameters['credit_hour'],
+                    ]);
+
+                    AssignSubject::updateOrCreate(['subject_id' => $subjectId, 'section' => 'A'], [
+                        'teacher_id' => $parameters['teacher_section_A'],
+                        'period' => $parameters['period_section_A'],
+                    ]);
+
+                    AssignSubject::updateOrCreate(['subject_id' => $subjectId, 'section' => 'B'], [
+                        'teacher_id' => $parameters['teacher_section_B'],
+                        'period' => $parameters['period_section_B'],
+                    ]);
+                    $route = redirect()->route('subject.list', [$parameters['semester']]);
+                }
+            }
+        }
+        return $route;
     }
 
     /**

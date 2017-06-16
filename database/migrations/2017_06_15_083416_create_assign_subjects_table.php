@@ -19,6 +19,8 @@ class CreateAssignSubjectsTable extends Migration
             $table->enum('section', ['A', 'B']);
             $table->unsignedInteger('teacher_id');
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
+            $table->unsignedInteger('subject_id');
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->timestamps();
         });
     }

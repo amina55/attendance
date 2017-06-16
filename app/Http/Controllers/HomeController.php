@@ -2,29 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Section;
-use Illuminate\Http\Request;
+use App\AssignSubject;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        $sections = Section::all();
-        return view('home', ['sections' => $sections]);
+        if(Auth::user()->type == 'admin') {
+            return $this->admin();
+        }else {
+            return $this->teacher();
+        }
+    }
+    public function admin()
+    {
+        return view('home');
+    }
+
+    public function teacher()
+    {
+        $subjects = AssignSubject::getTeachersSubjects(Auth::user()->teacher_id);
+        return view('attendance.home', ['subjects' => $subjects]);
     }
 }

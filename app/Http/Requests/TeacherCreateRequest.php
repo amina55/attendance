@@ -26,14 +26,14 @@ class TeacherCreateRequest extends FormRequest
         $rules = [
             'name' => 'bail|required|min:3|max:100',
             'phone_no' => 'required|regex:/[0-9]{9}/',
-            'email' => 'bail:required|string|email|max:100',
+            'email' => 'bail:required|string|email|max:100|unique:teachers',
             'address' => 'bail|required|min:3|max:200',
             'qualification' => 'bail|required|min:2|max:100',
            // 'unique_name' => 'bail|required|min:3|max:50|unique:teachers',
            // 'cnic' => 'bail|required|min:7|max:50|unique:teachers',
         ];
 
-        if($this->attributes->has('unique_name')) {
+        if($this->request->has('unique_name')) {
             $rules['unique_name'] = 'bail|required|min:3|max:50|unique:teachers';
             $rules['cnic'] = 'bail|required|min:7|max:50|unique:teachers';
         }

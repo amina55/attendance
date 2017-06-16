@@ -72,7 +72,7 @@
 
                                 <div class="col-md-6">
                                     <input id="enroll_no" type="text" class="form-control" name="enroll_no" {{ ($student) ? 'disabled' : '' }}
-                                    value="{{ old('enroll_no') ? old('enroll_no') : (($student) ? $student->enroll_no : '') }}" required>
+                                    value="{{ old('enroll_no') ? old('enroll_no') : (($student) ? $student->enroll_no : '') }}" >
 
                                     @if ($errors->has('enroll_no'))
                                         <span class="help-block">

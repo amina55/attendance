@@ -18,7 +18,7 @@ class CreateSubjectsTable extends Migration
             $table->integer('semester');
             $table->string('name', 100);
             $table->string('short_key', 30)->unique();
-            $table->string('credit_hour');
+            $table->string('credit_hour', 5);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
 

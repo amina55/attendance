@@ -21,3 +21,9 @@ table, th, td {
     text-align: center;
     margin: 25px;
 }
+.bg{
+    background-color: #a0a2a0;
+}
+.attendance-text{
+    width: 50px;
+}

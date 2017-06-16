@@ -19,8 +19,7 @@
                                 <label for="name" class="col-md-4 control-label">Name</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name"
-                                           value="{{ old('name') ? old('name') : (($subject) ? $subject->name : '') }}" required autofocus>
+                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') ? old('name') : (($subject) ? $subject->name : '') }}" required autofocus>
 
                                     @if ($errors->has('name'))
                                         <span class="help-block">
@@ -30,12 +29,11 @@
                                 </div>
                             </div>
 
-
                             <div class="form-group{{ $errors->has('short_key') ? ' has-error' : '' }}">
-                                <label for="short_key" class="col-md-4 control-label">Short Name</label>
+                                <label for="short_key" class="col-md-4 control-label">Unique Name</label>
 
                                 <div class="col-md-6">
-                                    <input id="short_key" type="text" class="form-control" name="short_key" value="{{ old('short_key') ? old('short_key') : (($subject) ? $subject->short_key : '') }}" required>
+                                    <input id="short_key" type="text" class="form-control" name="short_key" value="{{ old('short_key') ? old('short_key') : (($subject) ? $subject->short_key : '') }}" {{ ($subject) ? 'disabled' : '' }} required>
 
                                     @if ($errors->has('short_key'))
                                         <span class="help-block">
@@ -45,16 +43,30 @@
                                 </div>
                             </div>
 
+                            <div class="form-group{{ $errors->has('credit_hour') ? ' has-error' : '' }}">
+                                <label for="credit_hour" class="col-md-4 control-label">Credit Hours</label>
+
+                                <div class="col-md-6">
+                                    <input id="credit_hour" type="text" class="form-control" name="credit_hour" value="{{ old('credit_hour') ? old('credit_hour') : (($subject) ? $subject->credit_hour : '') }}" required>
+
+                                    @if ($errors->has('credit_hour'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('credit_hour') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
 
                             <div class="form-group{{ $errors->has('semester') ? ' has-error' : '' }}">
                                 <label for="semester" class="col-md-4 control-label">Semester</label>
 
                                 <div class="col-md-6">
+                                    <?php $activeSemester = old('semester') ? old('semester') : (($subject) ? $subject->semester : '');  ?>
+
                                     <select id="semester" class="form-control" name="semester" required>
                                         <option value=""> -- Select A Semester -- </option>
-
-                                    @foreach($semesters as $semester)
-                                            <option value="{{ $semester }}"> Semester {{ $semester }}</option>
+                                        @foreach($semesters as $semester)
+                                            <option {{ ($activeSemester == $semester) ? 'selected' : '' }} value="{{ $semester }}"> Semester {{ $semester }}</option>
                                         @endforeach
                                     </select>
 
@@ -72,11 +84,11 @@
                                 <label for="teacher_section_A" class="col-md-4 control-label">Assign Teacher</label>
 
                                 <div class="col-md-6">
-                                    <?php $teacherA = old('teacher_section_A') ? old('teacher_section_A') : (($subject) ? $subject->teacher_section_A : '');  ?>
-                                    <select id="semester" class="form-control" name="semester" {{ ($subject) ? 'disabled' : '' }} required>
+                                    <?php $teacherAId = old('teacher_section_A') ? old('teacher_section_A') : (($teacherA) ? $teacherA->teacher_id : '');  ?>
+                                    <select id="teacher_section_A" class="form-control" name="teacher_section_A" required>
                                         <option value=""> -- Select A Teacher -- </option>
-                                    @foreach($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}"> {{ $teacher->name }}</option>
+                                        @foreach($teachers as $teacher)
+                                            <option {{ ($teacher->id == $teacherAId) ? 'selected' : '' }} value="{{ $teacher->id }}"> {{ $teacher->name }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('teacher_section_A'))
@@ -91,11 +103,11 @@
                                 <label for="period_section_A" class="col-md-4 control-label">Assign Period No.</label>
 
                                 <div class="col-md-6">
-                                    <?php $periodId =  old('period_section_A') ? old('period_section_A') : (($subject) ? $subject->period_section_A : ''); ?>
+                                    <?php $periodAId =  old('period_section_A') ? old('period_section_A') : (($teacherA) ? $teacherA->period : '');  ?>
                                     <select id="period_section_A" class="form-control" name="period_section_A" required>
                                         <option value=""> -- Select A Period -- </option>
-                                    @foreach($semesters as $semester)
-                                            <option value="{{ $semester }}"> Period {{ $semester }}</option>
+                                        @foreach($semesters as $semester)
+                                            <option {{ ($semester == $periodAId) ? 'selected' : '' }} value="{{ $semester }}"> Period {{ $semester }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('period_section_A'))
@@ -112,11 +124,11 @@
                                 <label for="teacher_section_B" class="col-md-4 control-label">Assign Teacher</label>
 
                                 <div class="col-md-6">
-                                    <?php $teacherA = old('teacher_section_B') ? old('teacher_section_B') : (($subject) ? $subject->teacher_section_B : '');  ?>
-                                    <select id="semester" class="form-control" name="semester" {{ ($subject) ? 'disabled' : '' }} required>
+                                    <?php $teacherBId = old('teacher_section_B') ? old('teacher_section_B') : (($teacherB) ? $teacherB->teacher_id : '');   ?>
+                                    <select id="teacher_section_B" class="form-control" name="teacher_section_B" required>
                                         <option value=""> -- Select A Teacher -- </option>
-                                    @foreach($teachers as $teacher)
-                                            <option value="{{ $teacher->id }}"> {{ $teacher->name }}</option>
+                                        @foreach($teachers as $teacher)
+                                            <option {{ ($teacher->id == $teacherBId) ? 'selected' : '' }} value="{{ $teacher->id }}"> {{ $teacher->name }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('teacher_section_B'))
@@ -131,11 +143,11 @@
                                 <label for="period_section_B" class="col-md-4 control-label">Assign Period No.</label>
 
                                 <div class="col-md-6">
-                                    <?php $periodId =  old('period_section_B') ? old('period_section_B') : (($subject) ? $subject->period_section_B : ''); ?>
+                                    <?php $periodBId =  old('period_section_B') ? old('period_section_B') : (($teacherB) ? $teacherB->period : '');  ?>
                                     <select id="period_section_B" class="form-control" name="period_section_B" required>
                                         <option value=""> -- Select A Period -- </option>
-                                    @foreach($semesters as $semester)
-                                            <option value="{{ $semester }}"> Period {{ $semester }}</option>
+                                        @foreach($semesters as $semester)
+                                            <option {{ ($periodBId == $semester) ? 'selected' : '' }} value="{{ $semester }}"> Period {{ $semester }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('period_section_B'))
